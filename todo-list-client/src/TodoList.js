@@ -8,7 +8,7 @@ export default class TodoList extends React.Component{
    
     render(){
         return  <ul>
-        {this.props.todoItems.map((item) => {
+        {this.props.todoItems.map((item,index) => {
           if (item.delete) return;
           return (
             <TodoListItem key={item.id} item={item} deleteTodoItem={this.deleteTodoItem}/>

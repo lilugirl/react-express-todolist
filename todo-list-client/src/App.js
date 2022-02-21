@@ -2,22 +2,30 @@ import React from "react";
 import axios from 'axios';
 import TodoForm from './TodoForm';
 import TodoList from './TodoList';
+import { ThemeContext,store } from "./context";
+import ChildComponent from './ChildComponent';
 import "./App.css";
 
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
-      todoItems: [],
+      store
     };
+    console.log('this.state.store',this.state.store)
+  }
+
+  _updateState(){
+    const state=this.state.store.getState();
+    console.log('_updateState',state)
+    this.setState(state)
+    
   }
 
   componentDidMount(){
-    const that=this;
-    axios.get('/items').then(function(response){
-      that.setState({todoItems: [...response.data]})
-    })
+    console.log('component  did mount')
+    this.state.store.subscribe(()=>this._updateState())
   }
 
   addTodoItem=(item)=>{
@@ -44,11 +52,14 @@ export default class App extends React.Component {
 
   render() {
     return (
+      <ThemeContext.Provider value={{store:this.state.store}}>
+        <ChildComponent >哈哈</ChildComponent>
       <div>
         <h1>TodoList</h1>
-        <TodoForm addTodoItem={this.addTodoItem} />
-        <TodoList todoItems={this.state.todoItems} deleteTodoItem={this.deleteTodoItem} />
+        {/* <TodoForm addTodoItem={this.addTodoItem} />
+        <TodoList todoItems={this.state.todoItems} deleteTodoItem={this.deleteTodoItem} /> */}
       </div>
+      </ThemeContext.Provider>
     );
   }
 }
